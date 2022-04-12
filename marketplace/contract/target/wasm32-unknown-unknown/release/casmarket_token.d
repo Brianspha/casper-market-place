@@ -1,1 +1,0 @@
-/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/casmarket_token.wasm: /Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/src/casmarket_token.rs /Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/src/minters_control.rs

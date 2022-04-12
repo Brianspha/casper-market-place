@@ -1,2 +1,0 @@
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/build/typenum-d097a62f968362f1/out/consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/build/typenum-d097a62f968362f1/out/op.rs
