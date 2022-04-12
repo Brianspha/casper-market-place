@@ -1,0 +1,21 @@
+[package]
+name = "contract"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+casper-contract = "1.4.3"
+casper-types = "1.4.4"
+cep47 = { git="https://github.com/casper-ecosystem/casper-nft-cep47", branch="feature/reorg_lib" }
+
+[[bin]]
+name = "casmarket_token"
+path = "src/casmarket_token.rs"
+bench = false
+doctest = false
+test = false
+
+[profile.release]
+codegen-units = 1
+lto = true
+

@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/siphamandlamjoli/Documents/GitHub/casper-contracts'
+make: Leaving directory `/Users/siphamandlamjoli/Documents/GitHub/casper-contracts'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

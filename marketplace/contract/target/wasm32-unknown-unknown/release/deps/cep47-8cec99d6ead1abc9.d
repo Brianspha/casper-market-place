@@ -1,0 +1,10 @@
+/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/deps/cep47-8cec99d6ead1abc9.rmeta: /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/lib.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/cep47.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/data.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/event.rs
+
+/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/deps/libcep47-8cec99d6ead1abc9.rlib: /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/lib.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/cep47.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/data.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/event.rs
+
+/Users/siphamandlamjoli/Documents/GitHub/casper-contracts/marketplace/contract/target/wasm32-unknown-unknown/release/deps/cep47-8cec99d6ead1abc9.d: /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/lib.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/cep47.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/data.rs /Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/event.rs
+
+/Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/lib.rs:
+/Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/cep47.rs:
+/Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/data.rs:
+/Users/siphamandlamjoli/.cargo/git/checkouts/casper-nft-cep47-889a8fe38f6e2ec8/e1caed8/cep47/src/event.rs:

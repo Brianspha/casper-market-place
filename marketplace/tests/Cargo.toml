@@ -1,0 +1,23 @@
+[package]
+name = "tests"
+version = "0.1.0"
+edition = "2018"
+
+[dev-dependencies]
+casper-contract = { version = "1.4.3", default-features = false, features = ["test-support"] }
+casper-engine-test-support = { version = "2.0.3", features = ["test-support"] }
+casper-execution-engine = "1.4.4"
+casper-types = "1.4.6"
+hex = "0.4.3"
+blake2 = "0.9.1"
+test-env = { path = "../utils/test-env" }
+contract-utils = { path = "../utils/contract-utils" }
+
+[[bin]]
+name = "integration-tests"
+path = "src/integration_tests.rs"
+bench = false
+doctest = false
+
+[features]
+default = ["casper-contract/std", "casper-types/std", "casper-engine-test-support/test-support", "casper-contract/test-support"]
