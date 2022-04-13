@@ -55,7 +55,7 @@ impl CasMarketToken {
     }
     #[allow(unused_variables)]
     #[allow(unused)]
-    fn purchase_nft(&mut self, token_id: TokenId) -> Result<(), Error> {
+    pub fn purchase_nft(&mut self, token_id: TokenId) -> Result<(), Error> {
         let caller = CasMarketToken::default().get_caller();
         match self.owner_of(token_id.clone()) {
             Some(owner) => {
@@ -101,7 +101,7 @@ impl CasMarketToken {
             None => Ok(()),
         }
     }
-    fn mint(
+    pub fn mint(
         &mut self,
         recipient: Key,
         token_ids: Option<Vec<TokenId>>,
@@ -117,7 +117,7 @@ impl CasMarketToken {
         Ok(confirmed_token_ids)
     }
 
-    fn mint_copies(
+    pub fn mint_copies(
         &mut self,
         recipient: Key,
         token_ids: Option<Vec<TokenId>>,
@@ -137,7 +137,7 @@ impl CasMarketToken {
         self.mint(recipient, token_ids, token_metas)
     }
 
-    fn burn(&mut self, owner: Key, token_ids: Vec<TokenId>) -> Result<(), Error> {
+    pub fn burn(&mut self, owner: Key, token_ids: Vec<TokenId>) -> Result<(), Error> {
         let caller = CasMarketToken::default().get_caller();
         if !CasMarketToken::default().is_minter() && !CasMarketToken::default().is_admin(caller) {
             revert(ApiError::User(20));
@@ -146,7 +146,7 @@ impl CasMarketToken {
         Ok(())
     }
 
-    fn set_token_meta(&mut self, token_id: TokenId, token_meta: Meta) -> Result<(), Error> {
+    pub fn set_token_meta(&mut self, token_id: TokenId, token_meta: Meta) -> Result<(), Error> {
         let caller = CasMarketToken::default().get_caller();
         if !CasMarketToken::default().is_minter() && !CasMarketToken::default().is_admin(caller) {
             revert(ApiError::User(20));
@@ -155,7 +155,7 @@ impl CasMarketToken {
         Ok(())
     }
 
-    fn update_token_meta(
+    pub fn update_token_meta(
         &mut self,
         token_id: TokenId,
         token_meta_key: String,
@@ -173,7 +173,7 @@ impl CasMarketToken {
         Ok(())
     }
 
-    fn update_token_commission(&mut self, token_id: TokenId, value: U512) -> Result<(), Error> {
+    pub fn update_token_commission(&mut self, token_id: TokenId, value: U512) -> Result<(), Error> {
         if self.owner_of(token_id.clone()).is_none() {
             return Err(Error::TokenIdDoesntExist);
         };
@@ -192,10 +192,10 @@ impl CasMarketToken {
             }
         }
     }
-    fn remove_value(name: &str) {
+    pub fn remove_value(name: &str) {
         runtime::remove_key(name)
     }
-    fn get_token_price<T: ToBytes + CLTyped + casper_types::bytesrepr::FromBytes>(
+    pub fn get_token_price<T: ToBytes + CLTyped + casper_types::bytesrepr::FromBytes>(
         name: &str,
     ) -> Result<U512, Error> {
         match runtime::get_key(name) {
@@ -208,7 +208,7 @@ impl CasMarketToken {
         }
     }
 
-    fn get_token_delegated<T: ToBytes + CLTyped + casper_types::bytesrepr::FromBytes>(
+    pub fn get_token_delegated<T: ToBytes + CLTyped + casper_types::bytesrepr::FromBytes>(
         name: &str,
     ) -> Result<bool, Error> {
         match runtime::get_key(name) {
@@ -220,7 +220,7 @@ impl CasMarketToken {
             None => Err(Error::TokenIdDoesntExist),
         }
     }
-    fn delagate_nft(
+    pub fn delagate_nft(
         &mut self,
         token_id: TokenId,
         owner: Key,
@@ -258,7 +258,7 @@ impl CasMarketToken {
     }
     #[allow(unused_variables)]
     #[allow(unused)]
-    fn revoke_delegation(&mut self, token_id: TokenId, owner: Key) -> Result<String, Error> {
+    pub fn revoke_delegation(&mut self, token_id: TokenId, owner: Key) -> Result<String, Error> {
         match CasMarketToken::get_token_delegated::<bool>(token_id.as_str()) {
             core::result::Result::Ok(delegated) => {
                 if !delegated {
@@ -268,14 +268,17 @@ impl CasMarketToken {
                 match runtime::get_key(CASMARKET_TOKEN_KEY) {
                     //@dev here we fetch the contract address then transfer nft token ownership to it and mark the token as delegated
                     Some(contract_hash) => {
-                        if self.owner_of(token_id.clone()) == core::prelude::v1::Some(contract_hash) {
+                        if self.owner_of(token_id.clone()) == core::prelude::v1::Some(contract_hash)
+                        {
                             CasMarketToken::remove_value(token_id.as_str());
-                            CasMarketToken::remove_value(token_id.as_str()); //@dev -1 represents 
+                            CasMarketToken::remove_value(token_id.as_str()); //@dev -1 represents
                             match self.transfer(owner, [token_id].to_vec()) {
                                 core::result::Result::Ok(_results) => {
                                     Ok("Succesfully revoked delegation to token".to_string())
                                 }
-                                _ => Ok("Unable to transfer token from contract to user".to_string()),
+                                _ => {
+                                    Ok("Unable to transfer token from contract to user".to_string())
+                                }
                             }
                         } else {
                             Ok("Internal contract error".to_string())
@@ -291,7 +294,7 @@ impl CasMarketToken {
     }
     #[allow(unused_variables)]
     #[allow(unused)]
-    fn transfer_tokens(&mut self, recipient: Key, amount: U512) -> Result<(), Error> {
+    pub fn transfer_tokens(&mut self, recipient: Key, amount: U512) -> Result<(), Error> {
         match URef::try_from(recipient) {
             core::prelude::v1::Ok(recipient) => {
                 transfer_from_purse_to_purse(get_main_purse(), new_uref(recipient), amount, None)
@@ -306,7 +309,7 @@ impl CasMarketToken {
 }
 
 #[no_mangle]
-fn update_token_commission() {
+pub fn update_token_commission() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let value = runtime::get_named_arg::<U512>("value");
     CasMarketToken::default()
@@ -314,7 +317,7 @@ fn update_token_commission() {
         .unwrap_or_revert();
 }
 #[no_mangle]
-fn delagate_nft() {
+pub fn delagate_nft() {
     let caller = CasMarketToken::default().get_caller();
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let token_price = runtime::get_named_arg::<U512>("token_price");
@@ -324,7 +327,7 @@ fn delagate_nft() {
         .unwrap_or_revert();
 }
 #[no_mangle]
-fn revoke_delagation() {
+pub fn revoke_delegation() {
     let caller = CasMarketToken::default().get_caller();
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     CasMarketToken::default()
@@ -332,62 +335,62 @@ fn revoke_delagation() {
         .unwrap_or_revert();
 }
 #[no_mangle]
-fn purchase_nft() {
+pub fn purchase_nft() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     CasMarketToken::default()
         .purchase_nft(token_id)
         .unwrap_or_revert();
 }
 #[no_mangle]
-fn constructor() {
+pub fn constructor() {
     let name = runtime::get_named_arg::<String>("name");
     let symbol = runtime::get_named_arg::<String>("symbol");
     let meta = runtime::get_named_arg::<Meta>("meta");
-    let admin = runtime::get_named_arg::<Key>("admin");
+    let admin = CasMarketToken::default().get_caller();
     CasMarketToken::default().constructor(name, symbol, meta);
     CasMarketToken::default().add_admin_without_checked(admin);
 }
 
 #[no_mangle]
-fn name() {
+pub fn name() {
     let ret = CasMarketToken::default().name();
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn symbol() {
+pub fn symbol() {
     let ret = CasMarketToken::default().symbol();
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn meta() {
+pub fn meta() {
     let ret = CasMarketToken::default().meta();
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn total_supply() {
+pub fn total_supply() {
     let ret = CasMarketToken::default().total_supply();
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn balance_of() {
+pub fn balance_of() {
     let owner = runtime::get_named_arg::<Key>("owner");
     let ret = CasMarketToken::default().balance_of(owner);
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn owner_of() {
+pub fn owner_of() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let ret = CasMarketToken::default().owner_of(token_id);
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn get_token_by_index() {
+pub fn get_token_by_index() {
     let owner = runtime::get_named_arg::<Key>("owner");
     let index = runtime::get_named_arg::<U256>("index");
     let ret = CasMarketToken::default().get_token_by_index(owner, index);
@@ -395,14 +398,14 @@ fn get_token_by_index() {
 }
 
 #[no_mangle]
-fn token_meta() {
+pub fn token_meta() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let ret = CasMarketToken::default().token_meta(token_id);
     runtime::ret(CLValue::from_t(ret).unwrap_or_revert());
 }
 
 #[no_mangle]
-fn set_token_meta() {
+pub fn set_token_meta() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let token_meta = runtime::get_named_arg::<Meta>("token_meta");
     CasMarketToken::default()
@@ -411,7 +414,7 @@ fn set_token_meta() {
 }
 
 #[no_mangle]
-fn update_token_meta() {
+pub fn update_token_meta() {
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
     let token_meta_key = runtime::get_named_arg::<String>("token_meta_key");
     let token_meta_value = runtime::get_named_arg::<String>("token_meta_value");
@@ -421,7 +424,7 @@ fn update_token_meta() {
 }
 
 #[no_mangle]
-fn mint() {
+pub fn mint() {
     let recipient = runtime::get_named_arg::<Key>("recipient");
     let token_ids = runtime::get_named_arg::<Option<Vec<TokenId>>>("token_ids");
     let token_metas = runtime::get_named_arg::<Vec<Meta>>("token_metas");
@@ -431,7 +434,7 @@ fn mint() {
 }
 
 #[no_mangle]
-fn mint_copies() {
+pub fn mint_copies() {
     let recipient = runtime::get_named_arg::<Key>("recipient");
     let token_ids = runtime::get_named_arg::<Option<Vec<TokenId>>>("token_ids");
     let token_meta = runtime::get_named_arg::<Meta>("token_meta");
@@ -442,7 +445,7 @@ fn mint_copies() {
 }
 
 #[no_mangle]
-fn burn() {
+pub fn burn() {
     let owner = runtime::get_named_arg::<Key>("owner");
     let token_ids = runtime::get_named_arg::<Vec<TokenId>>("token_ids");
     CasMarketToken::default()
@@ -451,7 +454,7 @@ fn burn() {
 }
 
 #[no_mangle]
-fn transfer() {
+pub fn transfer() {
     let recipient = runtime::get_named_arg::<Key>("recipient");
     let token_ids = runtime::get_named_arg::<Vec<TokenId>>("token_ids");
     CasMarketToken::default()
@@ -460,7 +463,7 @@ fn transfer() {
 }
 
 #[no_mangle]
-fn transfer_from() {
+pub fn transfer_from() {
     let sender = runtime::get_named_arg::<Key>("sender");
     let recipient = runtime::get_named_arg::<Key>("recipient");
     let token_ids = runtime::get_named_arg::<Vec<TokenId>>("token_ids");
@@ -474,27 +477,27 @@ fn transfer_from() {
 }
 
 #[no_mangle]
-fn grant_minter() {
+pub fn grant_minter() {
     let minter = runtime::get_named_arg::<Key>("minter");
     CasMarketToken::default().assert_caller_is_admin();
     CasMarketToken::default().add_minter(minter);
 }
 
 #[no_mangle]
-fn revoke_minter() {
+pub fn revoke_minter() {
     let minter = runtime::get_named_arg::<Key>("minter");
     CasMarketToken::default().assert_caller_is_admin();
     CasMarketToken::default().revoke_minter(minter);
 }
 
 #[no_mangle]
-fn grant_admin() {
+pub fn grant_admin() {
     let admin = runtime::get_named_arg::<Key>("admin");
     CasMarketToken::default().add_admin(admin);
 }
 
 #[no_mangle]
-fn revoke_admin() {
+pub fn revoke_admin() {
     let admin = runtime::get_named_arg::<Key>("admin");
     CasMarketToken::default().disable_admin(admin);
 }
@@ -505,7 +508,6 @@ fn call() {
     let name: String = runtime::get_named_arg("name");
     let symbol: String = runtime::get_named_arg("symbol");
     let meta: Meta = runtime::get_named_arg("meta");
-    let admin: Key = runtime::get_named_arg("admin");
 
     let (contract_hash, _) = storage::new_contract(
         get_entry_points(),
@@ -519,7 +521,6 @@ fn call() {
         "name" => name,
         "symbol" => symbol,
         "meta" => meta,
-        "admin" => admin
     };
 
     let package_hash = ContractPackageHash::new(
@@ -561,7 +562,6 @@ fn get_entry_points() -> EntryPoints {
             Parameter::new("name", String::cl_type()),
             Parameter::new("symbol", String::cl_type()),
             Parameter::new("meta", Meta::cl_type()),
-            Parameter::new("admin", Key::cl_type()),
         ],
         <()>::cl_type(),
         EntryPointAccess::Groups(vec![Group::new("constructor")]),
@@ -753,22 +753,12 @@ fn get_entry_points() -> EntryPoints {
         EntryPointType::Contract,
     ));
     entry_points.add_entry_point(EntryPoint::new(
-        String::from("store_u512"),
-        vec![
-            Parameter::new("name", CLType::String),
-            Parameter::new("value", CLType::U512),
-        ],
-        CLType::Unit,
-        EntryPointAccess::Public,
-        EntryPointType::Contract,
-    ));
-    entry_points.add_entry_point(EntryPoint::new(
         String::from("revoke_delegation"),
         vec![
             Parameter::new("token_id", TokenId::cl_type()),
             Parameter::new("owner", Key::cl_type()),
         ],
-        CLType::Unit,
+        <()>::cl_type(),
         EntryPointAccess::Public,
         EntryPointType::Contract,
     ));
@@ -778,9 +768,8 @@ fn get_entry_points() -> EntryPoints {
             Parameter::new("token_id", TokenId::cl_type()),
             Parameter::new("owner", Key::cl_type()),
             Parameter::new("token_price", CLType::U512),
-
         ],
-        CLType::Unit,
+        <()>::cl_type(),
         EntryPointAccess::Public,
         EntryPointType::Contract,
     ));

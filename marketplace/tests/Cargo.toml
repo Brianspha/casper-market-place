@@ -13,11 +13,6 @@ blake2 = "0.9.1"
 test-env = { path = "../utils/test-env" }
 contract-utils = { path = "../utils/contract-utils" }
 
-[[bin]]
-name = "integration-tests"
-path = "src/integration_tests.rs"
-bench = false
-doctest = false
 
 [features]
-default = ["casper-contract/std", "casper-types/std", "casper-engine-test-support/test-support", "casper-contract/test-support"]
+default = ["casper-contract/std", "casper-types/std", "casper-contract/test-support"]

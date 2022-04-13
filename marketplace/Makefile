@@ -3,7 +3,7 @@ prepare:
 
 build-contract:
 	cd contract && cargo build --release --target wasm32-unknown-unknown
-	wasm-strip contract/target/wasm32-unknown-unknown/release/contract.wasm 2>/dev/null | true
+	wasm-strip contract/target/wasm32-unknown-unknown/release/casmarket_token.wasm 2>/dev/null | true
 
 test: build-contract
 	mkdir -p tests/wasm

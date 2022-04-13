@@ -23,7 +23,7 @@ impl CasMarketInstance {
         name: &str,
         symbol: &str,
         meta: Meta,
-    ) -> CasMarketInstance {
+        ) -> CasMarketInstance {
         CasMarketInstance(TestContract::new(
             env,
             "casmarket_token.wasm",
@@ -32,7 +32,7 @@ impl CasMarketInstance {
             runtime_args! {
                 "name" => name,
                 "symbol" => symbol,
-                "meta" => meta
+                "meta" => meta,
             },
         ))
     }
