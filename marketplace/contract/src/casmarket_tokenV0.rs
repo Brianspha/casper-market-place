@@ -101,7 +101,7 @@ impl CasMarketToken {
             None => Ok(()),
         }
     }
-      #[allow(unused_variables)]
+    #[allow(unused_variables)]
     #[allow(unused)]
     pub fn mint(
         &mut self,
@@ -113,7 +113,6 @@ impl CasMarketToken {
         if !CasMarketToken::default().is_minter() && !CasMarketToken::default().is_admin(caller) {
             revert(ApiError::User(20));
         }
-
         let confirmed_token_ids =
             CEP47::mint(self, recipient, token_ids, token_metas).unwrap_or_revert();
         Ok(confirmed_token_ids)
