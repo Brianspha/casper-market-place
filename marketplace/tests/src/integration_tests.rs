@@ -43,26 +43,72 @@ pub mod tests {
     }
 
     #[test]
-    fn test_token_meta() {
+    fn test_mint_copies() {
         let (env, token, owner) = deploy();
         let user = env.next_user();
         let token_id = TokenId::zero();
         let token_meta = contract_meta();
-
-        token.grant_admin(owner,owner);
-        token.grant_admin(owner,user);
-        token.grant_minter(owner,owner);
-        token.grant_minter(user,user);
-        token.mint_one(owner, user, token_id, token_meta.clone());
-    
-        let user_token_meta = token.token_meta(token_id);
-        assert_eq!(user_token_meta.unwrap(), token_meta);
-    
-        let first_user_token = token.get_token_by_index(Key::Account(user), U256::zero());
-        assert_eq!(first_user_token, Some(token_id));
+        token.mint_copies(owner, user, None, token_meta.clone(), 3);
+        assert_eq!(token.total_supply(), U256::from("3"));
     }
+    #[test]
+    fn test_delegate_nft() {
+        let (mut env, mut token, mut owner) = deploy();
+        let user = env.next_user();
+        let token_id = TokenId::zero();
+        let token_meta = contract_meta();
+        token.mint_copies(owner, user, None, token_meta.clone(), 3);
+        match U512::from_dec_str("111.11") {
+            Ok(number) => {
+                token.delagate_nft(user, TokenId::zero(), number);
+                assert_eq!(token.token_delegated(TokenId::zero()), true);
+            }
+            _ => (),
+        }
+    }
+    #[test]
+    fn test_delegate_revoke_nft() {
+        let (mut env, mut token, mut owner) = deploy();
+        let user = env.next_user();
+        let token_id = TokenId::zero();
+        let token_meta = contract_meta();
+        token.mint_copies(owner, user, None, token_meta.clone(), 3);
+        match U512::from_dec_str("111.11") {
+            Ok(number) => {
+                token.delagate_nft(user, TokenId::zero(), number);
+                assert_eq!(token.token_delegated(TokenId::zero()), true);
+                token.revoke_delegation(user, TokenId::zero(),token.owner_of(TokenId::zero()).unwrap());
+                assert_eq!(
+                    token.owner_of(TokenId::zero()).unwrap(),
+                    casper_types::Key::Account(owner)
+                );
+            }
+            _ => (),
+        }
+    }
+    #[test]
+    fn test_purchase_nft() {
+        let (mut env, mut token, mut owner) = deploy();
+        let user = env.next_user();
+        let token_id = TokenId::zero();
+        let token_meta = contract_meta();
+        token.mint_copies(owner, user, None, token_meta.clone(), 3);
+        match U512::from_dec_str("111.11") {
+            Ok(number) => {
+                token.delagate_nft(user, TokenId::zero(), number);
+                assert_eq!(token.token_delegated(TokenId::zero()), true);
+                token.purchase_nft(owner, TokenId::zero(), number);
+                assert_eq!(
+                    token.owner_of(TokenId::zero()).unwrap(),
+                    casper_types::Key::Account(owner)
+                );
+                assert_eq!(token.balance_of(Key::Account(owner)), U256::from(1));
+            }
+            _ => (),
+        }
+    }
+  
 }
-
 #[allow(unused)]
 
 fn main() {

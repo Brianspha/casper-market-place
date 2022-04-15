@@ -101,7 +101,7 @@ impl CasMarketToken {
             None => Ok(()),
         }
     }
-      #[allow(unused_variables)]
+    #[allow(unused_variables)]
     #[allow(unused)]
     pub fn mint(
         &mut self,
@@ -291,6 +291,17 @@ impl CasMarketToken {
             }
             _ => {
                 revert(ApiError::User(20));
+            }
+        }
+    }
+    
+    pub fn token_delegated(&mut self, token_id: TokenId) -> Result<bool, Error> {
+        match CasMarketToken::get_token_delegated::<bool>(&token_id) {
+            core::result::Result::Ok(delegated) => {
+                Ok(delegated)
+            }
+            _ => {
+                revert(ApiError::User(20))
             }
         }
     }
@@ -503,7 +514,11 @@ pub fn revoke_admin() {
     let admin = runtime::get_named_arg::<Key>("admin");
     CasMarketToken::default().disable_admin(admin);
 }
-
+#[no_mangle]
+pub fn token_delegated(){
+    let token_id = runtime::get_named_arg::<TokenId>("token_id");
+    CasMarketToken::default().token_delegated(token_id.to_string()).unwrap_or_revert();
+}
 #[no_mangle]
 fn call() {
     // Read arguments for the constructor call.
@@ -773,6 +788,15 @@ fn get_entry_points() -> EntryPoints {
             Parameter::new("token_id", TokenId::cl_type()),
             Parameter::new("owner", Key::cl_type()),
             Parameter::new("token_price", CLType::U512),
+        ],
+        <()>::cl_type(),
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
+    entry_points.add_entry_point(EntryPoint::new(
+        String::from("token_delegated"),
+        vec![
+            Parameter::new("token_id", TokenId::cl_type()),
         ],
         <()>::cl_type(),
         EntryPointAccess::Public,

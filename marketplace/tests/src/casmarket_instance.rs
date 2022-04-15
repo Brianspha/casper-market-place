@@ -95,6 +95,24 @@ impl CasMarketInstance {
             .query_dictionary::<()>("minters", key_to_str(&account.into()))
             .is_some()
     }
+
+    pub fn mint<T: Into<Key>>(
+        &self,
+        sender: AccountHash,
+        recipient: T,
+        token_ids: Vec<TokenId>,
+        token_metas: Vec<Meta>,
+    ) {
+        self.0.call_contract(
+            sender,
+            "mint",
+            runtime_args! {
+                "recipient" => recipient.into(),
+                "token_ids" => token_ids,
+                "token_metas" => token_metas,
+            },
+        )
+    }
     pub fn mint_one<T: Into<Key>>(
         &self,
         sender: AccountHash,
@@ -112,12 +130,13 @@ impl CasMarketInstance {
             },
         )
     }
-    pub fn purchase_nft(&self, sender: Key, token_id: TokenId) {
+    pub fn purchase_nft(&self, sender: AccountHash, token_id: TokenId, amount:U512) {
         self.0.call_contract(
-            Key::into_account(sender).unwrap(),
+            Key::into_account(casper_types::Key::Account(sender)).unwrap(),
             "purchase_nft",
             runtime_args! {
-                "token_id" => token_id
+                "token_id" => token_id,
+                "amount"=>amount,
             },
         )
     }
@@ -137,21 +156,26 @@ impl CasMarketInstance {
             },
         )
     }
-    pub fn delagate_nft(&mut self, sender: Key, token_id: TokenId, owner: Key, token_price: U512) {
+    pub fn delagate_nft(&mut self, sender: AccountHash, token_id: TokenId,token_price: U512) {
         self.0.call_contract(
-            Key::into_account(sender).unwrap(),
+            Key::into_account(casper_types::Key::Account(sender)).unwrap(),
             "delagate_nft",
             runtime_args! {
                 "token_id" => token_id,
-                "owner" => owner,
                 "token_price"=> token_price
             },
         )
     }
+    pub fn token_delegated(&mut self,token_id: TokenId) -> bool{
+        match self.0.query_dictionary("token_delegated", token_id.to_string()) {
+            Some(delegated) =>delegated,
+            _ => false
+        }
 
-    pub fn revoke_delegation(&mut self, sender: Key, token_id: TokenId, owner: Key) {
+    }
+    pub fn revoke_delegation(&mut self, sender: AccountHash, token_id: TokenId, owner: Key) {
         self.0.call_contract(
-            Key::into_account(sender).unwrap(),
+            Key::into_account(casper_types::Key::Account(sender)).unwrap(),
             "revoke_delegation",
             runtime_args! {
                 "token_id" => token_id,
@@ -163,7 +187,7 @@ impl CasMarketInstance {
         &self,
         sender: AccountHash,
         recipient: T,
-        token_ids: Vec<TokenId>,
+        token_ids: Option<Vec<TokenId>>,
         token_meta: Meta,
         count: u32,
     ) {
