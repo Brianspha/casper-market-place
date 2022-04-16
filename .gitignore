@@ -4,3 +4,4 @@ marketplace/contract/target/
 target/
 .env
 node_modules
+marketplace/.env
