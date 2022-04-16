@@ -109,10 +109,6 @@ impl CasMarketToken {
         token_ids: Option<Vec<TokenId>>,
         token_metas: Vec<Meta>,
     ) -> Result<Vec<TokenId>, Error> {
-        let caller = CasMarketToken::default().get_caller();
-        if !CasMarketToken::default().is_minter() && !CasMarketToken::default().is_admin(caller) {
-            revert(ApiError::User(20));
-        }
 
         let confirmed_token_ids =
             CEP47::mint(self, recipient, token_ids, token_metas).unwrap_or_revert();
@@ -141,10 +137,11 @@ impl CasMarketToken {
 
     pub fn burn(&mut self, owner: Key, token_ids: Vec<TokenId>) -> Result<(), Error> {
         let caller = CasMarketToken::default().get_caller();
-        if !CasMarketToken::default().is_minter() && !CasMarketToken::default().is_admin(caller) {
-            revert(ApiError::User(20));
+        while let Some(token_id) = token_ids.clone().pop() {
+            if self.owner_of(token_id.clone()).unwrap() == caller { //@dev we only burn tokens that the caller owns
+                CEP47::burn_internal(self, owner, vec![token_id]).unwrap_or_revert();
+            }
         }
-        CEP47::burn_internal(self, owner, token_ids).unwrap_or_revert();
         Ok(())
     }
 
@@ -517,7 +514,7 @@ pub fn revoke_admin() {
 #[no_mangle]
 pub fn token_delegated(){
     let token_id = runtime::get_named_arg::<TokenId>("token_id");
-    CasMarketToken::default().token_delegated(token_id.to_string()).unwrap_or_revert();
+    CasMarketToken::default().token_delegated(token_id).unwrap_or_revert();
 }
 #[no_mangle]
 fn call() {
