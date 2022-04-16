@@ -1,8 +1,21 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
+import store from "./store";
+import vuetify from "./plugins/vuetify";
+import router from "./router/index";
+import ApexCharts from "apexcharts";
+import VSwatches from "vue-swatches";
 
-Vue.config.productionTip = false
-
+// Import the styles too, typically in App.vue or main.js
+import "vue-swatches/dist/vue-swatches.css";
+Vue.config.productionTip = false;
+Vue.component({
+  apexchart: ApexCharts,
+  "v-swatches": VSwatches,
+});
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  store,
+  vuetify,
+  router,
+  render: (h) => h(App),
+}).$mount("#app");

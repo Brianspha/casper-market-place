@@ -2,3 +2,5 @@
 marketplace/contract/target/
 marketplace/contract/target/
 target/
+.env
+node_modules
