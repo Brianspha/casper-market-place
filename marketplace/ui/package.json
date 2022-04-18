@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "usage":"npx ts-node ./scripts/usage.ts"
+    "usage":"npx ts-node ./scripts/deploynft.ts"
   },
   "dependencies": {
     "bignumber.js": "^9.0.2",
