@@ -18,7 +18,7 @@
     "secp256k1": "^4.0.3",
     "skynet-js": "^4.1.0",
     "sweetalert2": "^11.4.8",
-    "vue": "^2.6.11",
+    "vue": "^3.0.0",
     "apexcharts": "^3.27.3",
     "file-saver": "^2.0.5",
     "game-grid": "^0.0.9",
